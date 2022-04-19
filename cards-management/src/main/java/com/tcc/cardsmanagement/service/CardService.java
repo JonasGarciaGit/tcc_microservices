@@ -1,0 +1,89 @@
+package com.tcc.cardsmanagement.service;
+
+import java.util.concurrent.ThreadLocalRandom;
+
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import com.tcc.cardsmanagement.input.CardInput;
+import com.tcc.cardsmanagement.model.CardModel;
+import com.tcc.cardsmanagement.repository.CardRepository;
+
+@Service
+public class CardService {
+
+	@Autowired
+	CardRepository repository;
+	
+	public JSONObject generateCard(CardInput input) {
+		JSONObject response = new JSONObject();
+		try {
+			
+			CardModel model = new CardModel(input);
+			String cardNumberGenerated = "5502" + GenerationNumbers(0, 9, 12);
+			
+			if("5502".equals(cardNumberGenerated)) {
+				response.put("returnCode","422").put("returnDescription","Card number generation fail, please try again.");
+				return response;
+			}
+			
+			model.setCardNumber(cardNumberGenerated);
+			
+			model = repository.save(model);
+		
+			if(model == null) {
+				response.put("returnCode","422").put("returnDescription","Creation card failed");
+			}else {
+				response.put("returnCode","201").put("returnDescription","Card was created with successfully");
+			}
+			
+		}catch (Exception e) {
+			response.put("returnCode","1000").put("returnDescription","Internal server error");
+		}
+		
+		return response;
+	}
+	
+	
+	public JSONObject getGenerateCard(String documentNumber) {
+		JSONObject response = new JSONObject();
+		
+		try {
+			CardModel model = null;
+			
+			if(StringUtils.isEmpty(documentNumber)) {
+				response.put("returnCode","422").put("returnDescription","documentNumber can't be null or empty");
+				return response;
+			}
+			
+			model = repository.findByDocumentNumber(documentNumber);
+			
+			if(model == null) {
+				response.put("returnCode","404").put("returnDescription","card not found");
+				return response;
+			}
+			
+			response = new JSONObject(model);
+			response.put("returnCode", "200").put("returnDescription", "card found with success");
+			
+		}catch (Exception e) {
+			response.put("returnCode","1000").put("returnDescription","Internal server error");
+		}
+		
+		return response;
+	}
+	
+	
+	public String GenerationNumbers(int min,int max,int quantity) {
+		String numberGenerated = "";
+		
+		for(int i = 0; i < 12; i++) {
+			Integer number = ThreadLocalRandom.current().nextInt(min, max + 1);
+			numberGenerated += number.toString();
+		}
+		
+		return numberGenerated;
+	}
+}
