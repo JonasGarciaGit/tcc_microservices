@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import com.tcc.login.vo.AccountVO;
 
 @Component
-@FeignClient(name = "tcc-account", url = "localhost:8006")
+@FeignClient(name = "tcc-account")
 public interface AccountFeignClients {
 
 	@PutMapping(value = "/account", produces = MediaType.APPLICATION_JSON_VALUE)
