@@ -1,12 +1,16 @@
 package com.tcc.cadastro.services;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tcc.cadastro.feignClients.CardFeignClients;
 import com.tcc.cadastro.models.Account;
 import com.tcc.cadastro.repositories.AccountRepository;
 import com.tcc.cadastro.vo.AccountVO;
+import com.tcc.cadastro.vo.CardInput;
 
 import io.micrometer.core.instrument.util.StringUtils;
 
@@ -16,12 +20,17 @@ public class AccountService {
 	@Autowired
 	AccountRepository repository;
 	
+	@Autowired
+	CardFeignClients cardFeignClients;
+	
 	public JSONObject createAccount(AccountVO vo) {
 		JSONObject responseJson = new JSONObject();
 		try {
 			Account model = new Account();
 			model = voToModel(vo, model);
 			repository.save(model);
+			
+			cardFeignClients.generateCard(new CardInput("", "7055" + GenerationNumbers(0, 9, 19), model.getCpf(), "MULTIPLE", "HOLDER"));
 			
 			responseJson.put("code", "201").put("message", "Account created");
 		}catch (Exception e) {
@@ -99,6 +108,17 @@ public class AccountService {
 		accountForUpdate.setPassword(StringUtils.isEmpty(vo.getPassword()) ? accountInDb.getPassword() : vo.getPassword());
 		accountForUpdate.setId(accountInDb.getId());
 		return accountForUpdate;
+	}
+	
+	public String GenerationNumbers(int min,int max,int quantity) {
+		String numberGenerated = "";
+		
+		for(int i = 0; i < 12; i++) {
+			Integer number = ThreadLocalRandom.current().nextInt(min, max + 1);
+			numberGenerated += number.toString();
+		}
+		
+		return numberGenerated;
 	}
 	
 }
