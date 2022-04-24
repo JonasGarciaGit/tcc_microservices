@@ -47,6 +47,9 @@ public class Account implements Serializable {
 
 	@Column(name = "ADDRESS_COMPLEMENT")
 	private String addressComplement;
+	
+	@Column(name = "CEP")
+	private String cep;
 
 	@Column(name = "CELLPHONE")
 	private String cellPhone;
@@ -59,7 +62,7 @@ public class Account implements Serializable {
 
 	public Account(Integer id, String cpf, String name, String motherName, String birthDate, String gender,
 			String nationalId, String addressHome, String addressNumber, String addressComplement, String cellPhone,
-			String phone) {
+			String phone, String cep) {
 		super();
 		this.id = id;
 		this.cpf = cpf;
@@ -73,6 +76,7 @@ public class Account implements Serializable {
 		this.addressComplement = addressComplement;
 		this.cellPhone = cellPhone;
 		this.phone = phone;
+		this.cep = cep;
 	}
 
 	public Account() {
@@ -181,6 +185,14 @@ public class Account implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getCep() {
+		return cep;
+	}
+
+	public void setCep(String cep) {
+		this.cep = cep;
 	}
 	
 	

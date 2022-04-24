@@ -26,6 +26,8 @@ public class AccountVO {
 
 	private String phone;
 	
+	private String cep;
+	
 	private String password;
 	
 	private String newPassword;
@@ -34,7 +36,7 @@ public class AccountVO {
 
 	public AccountVO(Integer id, String cpf, String name, String motherName, String birthDate, String gender,
 			String nationalId, String addressHome, String addressNumber, String addressComplement, String cellPhone,
-			String phone, String password, String newPassword, String confirmationPassword) {
+			String phone, String password, String newPassword, String confirmationPassword, String cep) {
 		super();
 		this.id = id;
 		this.cpf = cpf;
@@ -51,6 +53,7 @@ public class AccountVO {
 		this.password = password;
 		this.newPassword = newPassword;
 		this.confirmationPassword = confirmationPassword;
+		this.cep = cep;
 	}
 
 	public AccountVO() {
@@ -175,6 +178,14 @@ public class AccountVO {
 
 	public void setConfirmationPassword(String confirmationPassword) {
 		this.confirmationPassword = confirmationPassword;
+	}
+
+	public String getCep() {
+		return cep;
+	}
+
+	public void setCep(String cep) {
+		this.cep = cep;
 	}
 	
 	
