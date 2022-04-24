@@ -21,6 +21,12 @@ public class Account implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
+	@Column(name = "UUID")
+	private String uuid;
+	
+	@Column(name = "ACCOUNT_NUMBER")
+	private String accountNumber;
+	
 	@Column(name = "CPF")
 	private String cpf;
 
@@ -62,7 +68,7 @@ public class Account implements Serializable {
 
 	public Account(Integer id, String cpf, String name, String motherName, String birthDate, String gender,
 			String nationalId, String addressHome, String addressNumber, String addressComplement, String cellPhone,
-			String phone, String cep) {
+			String phone, String cep, String uuid, String accountNumber) {
 		super();
 		this.id = id;
 		this.cpf = cpf;
@@ -77,6 +83,8 @@ public class Account implements Serializable {
 		this.cellPhone = cellPhone;
 		this.phone = phone;
 		this.cep = cep;
+		this.uuid = uuid;
+		this.accountNumber = accountNumber;
 	}
 
 	public Account() {
@@ -193,6 +201,22 @@ public class Account implements Serializable {
 
 	public void setCep(String cep) {
 		this.cep = cep;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
 	}
 	
 	

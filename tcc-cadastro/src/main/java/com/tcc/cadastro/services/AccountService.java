@@ -1,5 +1,6 @@
 package com.tcc.cadastro.services;
 
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.json.JSONObject;
@@ -89,6 +90,9 @@ public class AccountService {
 		account.setCellPhone(vo.getCellPhone());
 		account.setPhone(vo.getPhone());
 		account.setPassword(vo.getPassword());
+		account.setCep(vo.getCep());
+		account.setAccountNumber(GenerationNumbers(0, 9, 19));
+		account.setUuid(UUID.randomUUID().toString());
 		return account;
 	}
 	
@@ -107,6 +111,9 @@ public class AccountService {
 		accountForUpdate.setPhone(StringUtils.isEmpty(vo.getPhone()) ? accountInDb.getPhone() : vo.getPhone());
 		accountForUpdate.setPassword(StringUtils.isEmpty(vo.getPassword()) ? accountInDb.getPassword() : vo.getPassword());
 		accountForUpdate.setId(accountInDb.getId());
+		accountForUpdate.setUuid(accountInDb.getUuid());
+		accountForUpdate.setAccountNumber(accountInDb.getAccountNumber());
+		accountForUpdate.setCep(StringUtils.isEmpty(vo.getCep()) ? accountInDb.getCep() : vo.getCep());
 		return accountForUpdate;
 	}
 	
