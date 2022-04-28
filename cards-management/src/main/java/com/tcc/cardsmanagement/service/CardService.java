@@ -1,5 +1,8 @@
 package com.tcc.cardsmanagement.service;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.json.JSONObject;
@@ -29,6 +32,8 @@ public class CardService {
 				return response;
 			}
 			
+			
+			model.setValidThru(getValidThru());
 			model.setCardNumber(cardNumberGenerated);
 			
 			model = repository.save(model);
@@ -85,5 +90,17 @@ public class CardService {
 		}
 		
 		return numberGenerated;
+	}
+	
+	public String getValidThru() {
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("MM/yy");
+			Date date = new Date();
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);
+			cal.add(Calendar.YEAR, 8);
+			date = cal.getTime();
+			return sdf.format(date);
+		}catch (Exception e) { return "00/00"; }
 	}
 }

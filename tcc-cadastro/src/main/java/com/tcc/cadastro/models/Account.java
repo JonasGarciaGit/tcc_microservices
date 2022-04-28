@@ -65,10 +65,13 @@ public class Account implements Serializable {
 	
 	@Column(name = "PASSWORD")
 	private String password;
+	
+	@Column(name = "EMAIL")
+	private String email;
 
 	public Account(Integer id, String cpf, String name, String motherName, String birthDate, String gender,
 			String nationalId, String addressHome, String addressNumber, String addressComplement, String cellPhone,
-			String phone, String cep, String uuid, String accountNumber) {
+			String phone, String cep, String uuid, String accountNumber, String email) {
 		super();
 		this.id = id;
 		this.cpf = cpf;
@@ -85,6 +88,7 @@ public class Account implements Serializable {
 		this.cep = cep;
 		this.uuid = uuid;
 		this.accountNumber = accountNumber;
+		this.email = email;
 	}
 
 	public Account() {
@@ -217,6 +221,14 @@ public class Account implements Serializable {
 
 	public void setAccountNumber(String accountNumber) {
 		this.accountNumber = accountNumber;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 	

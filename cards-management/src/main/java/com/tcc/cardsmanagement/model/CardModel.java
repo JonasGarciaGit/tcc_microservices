@@ -32,13 +32,15 @@ public class CardModel implements Serializable{
 	private String productType;
 	@Column(name = "CARD_HOLDER_TYPE")
 	private String cardHolderType;
+	@Column(name = "VALID_THRU")
+	private String validThru;
 	
 	public CardModel() {
 		
 	}
 
 	public CardModel(BigDecimal id, String cardNumber, String accountNumber, String documentNumber, String productType,
-			String cardHolderType) {
+			String cardHolderType, String validThru) {
 		super();
 		this.id = id;
 		this.cardNumber = cardNumber;
@@ -46,6 +48,7 @@ public class CardModel implements Serializable{
 		this.documentNumber = documentNumber;
 		this.productType = productType;
 		this.cardHolderType = cardHolderType;
+		this.validThru = validThru;
 	}
 	
 	public CardModel(CardInput input) {
@@ -53,6 +56,7 @@ public class CardModel implements Serializable{
 		this.documentNumber = input.getDocumentNumber();
 		this.productType = input.getProductType();
 		this.cardHolderType = input.getCardHolderType();
+		this.validThru = input.getValidThru();
 	}
 
 	public BigDecimal getId() {
@@ -101,6 +105,14 @@ public class CardModel implements Serializable{
 
 	public void setCardHolderType(String cardHolderType) {
 		this.cardHolderType = cardHolderType;
+	}
+
+	public String getValidThru() {
+		return validThru;
+	}
+
+	public void setValidThru(String validThru) {
+		this.validThru = validThru;
 	}
 	
 	

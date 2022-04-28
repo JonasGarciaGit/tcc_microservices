@@ -93,6 +93,7 @@ public class AccountService {
 		account.setCep(vo.getCep());
 		account.setAccountNumber(GenerationNumbers(0, 9, 19));
 		account.setUuid(UUID.randomUUID().toString());
+		account.setEmail(vo.getEmail());
 		return account;
 	}
 	
@@ -114,6 +115,7 @@ public class AccountService {
 		accountForUpdate.setUuid(accountInDb.getUuid());
 		accountForUpdate.setAccountNumber(accountInDb.getAccountNumber());
 		accountForUpdate.setCep(StringUtils.isEmpty(vo.getCep()) ? accountInDb.getCep() : vo.getCep());
+		accountForUpdate.setEmail(StringUtils.isEmpty(vo.getEmail()) ? accountInDb.getEmail() : vo.getEmail());
 		return accountForUpdate;
 	}
 	

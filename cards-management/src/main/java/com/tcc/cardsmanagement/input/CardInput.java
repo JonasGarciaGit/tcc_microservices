@@ -12,6 +12,7 @@ public class CardInput {
 	private String documentNumber;
 	private String productType;
 	private String cardHolderType;
+	private String validThru;
 	
 	public CardInput() {
 		
@@ -55,6 +56,14 @@ public class CardInput {
 
 	public void setCardHolderType(String cardHolderType) {
 		this.cardHolderType = cardHolderType;
+	}
+
+	public String getValidThru() {
+		return validThru;
+	}
+
+	public void setValidThru(String validThru) {
+		this.validThru = validThru;
 	}
 	
 	
