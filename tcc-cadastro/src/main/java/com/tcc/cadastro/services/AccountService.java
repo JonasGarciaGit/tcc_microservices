@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.tcc.cadastro.feignClients.CardFeignClients;
 import com.tcc.cadastro.models.Account;
 import com.tcc.cadastro.repositories.AccountRepository;
+import com.tcc.cadastro.utils.Utils;
 import com.tcc.cadastro.vo.AccountVO;
 import com.tcc.cadastro.vo.CardInput;
 
@@ -26,14 +27,34 @@ public class AccountService {
 	
 	public JSONObject createAccount(AccountVO vo) {
 		JSONObject responseJson = new JSONObject();
+		Account model = null;
 		try {
-			Account model = new Account();
+			
+			responseJson = validateFieldsCreateAccount(vo);
+			
+			if(!"0".equals(responseJson.getString("code"))) {
+				return responseJson;
+			}
+
+			if(!Utils.isCPF(vo.getCpf())) {
+				return responseJson.put("code", "422").put("message", "inválid documentNumber!");
+			}
+			
+			
+			model = repository.findByCpf(vo.getCpf());
+			if(model != null) {
+				return responseJson.put("code", "422").put("message", "this account already exists!");
+			}
+			
+			responseJson = new JSONObject();	
+			model = new Account();
 			model = voToModel(vo, model);
 			repository.save(model);
 			
 			cardFeignClients.generateCard(new CardInput("", "7055" + GenerationNumbers(0, 9, 19), model.getCpf(), "MULTIPLE", "HOLDER"));
 			
 			responseJson.put("code", "201").put("message", "Account created");
+			
 		}catch (Exception e) {
 			responseJson.put("code", "500").put("message", "internal server error");
 		}
@@ -45,7 +66,17 @@ public class AccountService {
 	public JSONObject updateAccount(AccountVO vo) {
 		JSONObject responseJson = new JSONObject();
 		try {
+
+			if(StringUtils.isEmpty(vo.getCpf())){
+				return responseJson.put("code", "422").put("message", "the field documentNumber cant'be null or empty!");
+			}
+			
 			Account modelInDb = repository.findByCpf(vo.getCpf());
+			
+			if(modelInDb == null) {
+				return responseJson.put("code", "404").put("message", "account not found");
+			}
+			
 			Account model = updateCheck(vo, modelInDb);
 			
 			repository.saveAndFlush(model);
@@ -61,6 +92,10 @@ public class AccountService {
 	public JSONObject consultAccount(String cpf) {
 		JSONObject responseJson = new JSONObject();
 		try {
+			
+			if(StringUtils.isEmpty(cpf)){
+				return responseJson.put("code", "422").put("message", "the field documentNumber cant'be null or empty!");
+			}
 			
 			Account model = repository.findByCpf(cpf);
 			
@@ -89,7 +124,7 @@ public class AccountService {
 		account.setAddressComplement(vo.getAddressComplement());
 		account.setCellPhone(vo.getCellPhone());
 		account.setPhone(vo.getPhone());
-		account.setPassword(vo.getPassword());
+		account.setPassword(Utils.criptoPassword(vo.getPassword()));
 		account.setCep(vo.getCep());
 		account.setAccountNumber(GenerationNumbers(0, 9, 19));
 		account.setUuid(UUID.randomUUID().toString());
@@ -130,4 +165,54 @@ public class AccountService {
 		return numberGenerated;
 	}
 	
+	public JSONObject validateFieldsCreateAccount(AccountVO vo) {
+		JSONObject response = new JSONObject();
+		try {
+			
+			if(StringUtils.isEmpty(vo.getCpf())) {
+				return response.put("code", "422").put("message", "The field documentNumber can't be null or empty");
+			}
+			
+			if(StringUtils.isEmpty(vo.getName())) {
+				return response.put("code", "422").put("message", "The field name can't be null or empty");
+			}
+				
+			if(StringUtils.isEmpty(vo.getBirthDate())) {
+				return response.put("code", "422").put("message", "The field birthDate can't be null or empty");
+			}
+				
+			if(StringUtils.isEmpty(vo.getNationalId())) {
+				return response.put("code", "422").put("message", "The field nationalId can't be null or empty");
+			}
+			
+			if(StringUtils.isEmpty(vo.getAddressHome())) {
+				return response.put("code", "422").put("message", "The field addressHome can't be null or empty");
+			}
+			
+			if(StringUtils.isEmpty(vo.getAddressNumber())) {
+				return response.put("code", "422").put("message", "The field addressNumber can't be null or empty");
+			}
+			
+			if(StringUtils.isEmpty(vo.getCellPhone())) {
+				return response.put("code", "422").put("message", "The field cellPhone can't be null or empty");
+			}
+			
+			if(StringUtils.isEmpty(vo.getPassword())) {
+				return response.put("code", "422").put("message", "The field password can't be null or empty");
+			}
+			
+			if(StringUtils.isEmpty(vo.getCep())) {
+				return response.put("code", "422").put("message", "The field cep can't be null or empty");
+			}
+			
+			if(StringUtils.isEmpty(vo.getEmail())) {
+				return response.put("code", "422").put("message", "The field email can't be null or empty");
+			}
+			
+		}catch (Exception e) {
+			return response.put("code", "500").put("message", "internal server error");
+			
+		}
+		return response.put("code", "0").put("message", "fields validated successfully");
+	}
 }

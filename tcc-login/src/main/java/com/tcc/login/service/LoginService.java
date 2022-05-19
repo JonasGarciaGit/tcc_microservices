@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.tcc.login.feignclients.AccountFeignClients;
+import com.tcc.login.utils.Utils;
 import com.tcc.login.vo.AccountVO;
 
 @Service
@@ -27,8 +28,14 @@ public class LoginService {
 				return returnJson.put("code", "422").put("message", "document can't be null or empty!");
 			}
 			
+			input.setPassword(Utils.criptoPassword(input.getPassword()));
+			
 			ResponseEntity<String> requestResult = accountFeign.consultAccount(input.getCpf());
 			JSONObject requestToJson = new JSONObject(requestResult.getBody());
+			
+			if(!requestToJson.getString("code").equals("200")) {
+				return returnJson.put("code", "500").put("message", "there was an error querying the password");
+			}
 			
 			String passwordObtained = requestToJson.isNull("password") ? "999999" : requestToJson.get("password").toString();
 			
