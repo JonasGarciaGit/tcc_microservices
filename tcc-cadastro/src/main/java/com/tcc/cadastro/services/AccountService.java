@@ -36,7 +36,7 @@ public class AccountService {
 				return responseJson;
 			}
 
-			if(!Utils.isCPF(vo.getCpf())) {
+			if(!Utils.isCPF(vo.getCpf().replaceAll("[.\\-]", ""))) {
 				return responseJson.put("code", "422").put("message", "inválid documentNumber!");
 			}
 			
