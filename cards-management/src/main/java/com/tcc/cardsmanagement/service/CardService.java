@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.tcc.cardsmanagement.feignClients.PaymentsFeignClients;
+import com.tcc.cardsmanagement.input.BalanceInput;
 import com.tcc.cardsmanagement.input.CardInput;
 import com.tcc.cardsmanagement.model.CardModel;
 import com.tcc.cardsmanagement.repository.CardRepository;
@@ -19,6 +21,11 @@ public class CardService {
 
 	@Autowired
 	CardRepository repository;
+	
+	@Autowired
+	PaymentsFeignClients paymentClients;
+	
+	
 	
 	public JSONObject generateCard(CardInput input) {
 		JSONObject response = new JSONObject();
@@ -40,9 +47,13 @@ public class CardService {
 		
 			if(model == null) {
 				response.put("returnCode","422").put("returnDescription","Creation card failed");
-			}else {
-				response.put("returnCode","201").put("returnDescription","Card was created with successfully");
+				return response;
 			}
+				
+				
+			response.put("returnCode","201").put("returnDescription","Card was created with successfully");
+			paymentClients.newBalance(new BalanceInput(model.getAccountNumber(),0.0,model.getDocumentNumber(),model.getCardNumber()));
+			
 			
 		}catch (Exception e) {
 			response.put("returnCode","1000").put("returnDescription","Internal server error");
