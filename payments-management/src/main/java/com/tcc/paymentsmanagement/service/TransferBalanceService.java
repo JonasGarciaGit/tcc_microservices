@@ -1,5 +1,6 @@
 package com.tcc.paymentsmanagement.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +28,7 @@ public class TransferBalanceService {
 	
 	public JSONObject newTransaction(TransferBalanceInput input) {
 		JSONObject response = new JSONObject();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
 		
 		try {
 			TransferBalanceModel model = new TransferBalanceModel(input);
@@ -37,7 +39,7 @@ public class TransferBalanceService {
 			}
 			
 			
-			model.setDate(new Date().toString());
+			model.setDate(sdf.format(new Date()));
 			model = repository.save(model);
 
 			if(model == null && "200".equals(response.get("returnCode").toString())) {
