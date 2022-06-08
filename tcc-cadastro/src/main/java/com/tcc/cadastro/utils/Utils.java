@@ -90,4 +90,10 @@ public class Utils {
 	        }
 	        return null;
 	    }
+	
+	public static String removeAllSpecialCaracters(String value) {
+		String newValue = "";
+		newValue = value.replaceAll("[^A-Za-z0-9]","");
+		return newValue;
+	}
 }

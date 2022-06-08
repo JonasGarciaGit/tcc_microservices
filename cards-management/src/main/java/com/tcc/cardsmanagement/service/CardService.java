@@ -15,6 +15,7 @@ import com.tcc.cardsmanagement.input.BalanceInput;
 import com.tcc.cardsmanagement.input.CardInput;
 import com.tcc.cardsmanagement.model.CardModel;
 import com.tcc.cardsmanagement.repository.CardRepository;
+import com.tcc.cardsmanagement.utils.Util;
 
 @Service
 public class CardService {
