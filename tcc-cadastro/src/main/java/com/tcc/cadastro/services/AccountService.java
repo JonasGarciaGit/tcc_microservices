@@ -136,8 +136,6 @@ public class AccountService {
 		return response;
 	}
 
-	
-
 	private Account voToModel(AccountVO vo, Account account) {
 		account.setCpf(vo.getCpf());
 		account.setName(vo.getName());
